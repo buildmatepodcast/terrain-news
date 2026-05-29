@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TERRAIN — India's Property & Infrastructure Monitor</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f5f0ea; color: #111; }
+
+  /* MASTHEAD */
+  .masthead {
+    background: #111111;
+    border-bottom: 4px solid #b8962e;
+    padding: 28px 40px 20px;
+    text-align: center;
+  }
+  .masthead h1 {
+    font-family: Georgia, serif;
+    font-size: 56px;
+    font-weight: bold;
+    letter-spacing: 10px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .masthead .tagline {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #b8962e;
+    margin-top: 6px;
+  }
+
+  /* META BAR */
+  .meta-bar {
+    background: #1e1e1e;
+    color: #aaa;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .meta-bar span { color: #b8962e; }
+  .refresh-btn {
+    background: #111;
+    color: #fff;
+    border: 1px solid #b8962e;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    cursor: pointer;
+  }
+  .refresh-btn:hover { background: #b8962e; color: #111; }
+
+  /* NAV TABS */
+  .nav-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    overflow-x: auto;
+    padding: 0 20px;
+  }
+  .nav-tab {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #555;
+    padding: 14px 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+  }
+  .nav-tab:hover { color: #111; }
+  .nav-tab.active {
+    color: #111;
+    border-bottom: 3px solid #b8962e;
+    font-weight: bold;
+  }
+
+  /* CONTENT */
+  .content { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #b8962e;
+    font-family: Arial, sans-serif;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5dfd4;
+  }
+
+  /* NEWS CARDS */
+  .news-grid { display: grid; gap: 18px; }
+  .news-card {
+    background: #fff;
+    border: 1px solid #e5dfd4;
+    border-left: 4px solid #b8962e;
+    padding: 20px 24px;
+    transition: box-shadow 0.2s;
+  }
+  .news-card:hover { box-shadow: 0 4px 16px rgba(184,150,46,0.15); }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .news-card h3 {
+    font-family: Georgia, serif;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 1.4;
+    color: #111;
+    flex: 1;
+  }
+  .news-card h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .news-card h3 a:hover { color: #b8962e; }
+  .source-badge {
+    background: #111;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .card-date {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .card-summary {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #444;
+  }
+
+  /* CREDIBILITY NOTE */
+  .credibility-note {
+    background: #eee9e0;
+    border-left: 4px solid #b8962e;
+    padding: 16px 20px;
+    margin-top: 30px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #555;
+    line-height: 1.7;
+  }
+  .credibility-note strong { color: #111; }
+
+  /* ARCHIVE TAB */
+  .archive-msg {
+    background: #fff;
+    border: 1px solid #e5dfd4;
+    border-left: 4px solid #b8962e;
+    padding: 30px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+  }
+  .archive-msg h3 { font-family: Georgia, serif; font-size: 20px; color: #111; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+<div style="background:#111;color:#b8962e;text-align:center;padding:14px 20px;font-family:Arial,sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase;">EVENING EDITION &mdash; Friday, 29 May 2026 &nbsp;|&nbsp; <a href="../index.html" style="color:#b8962e;text-decoration:underline;">View Latest Edition &rarr;</a></div>
+
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <h1>TERRAIN</h1>
+  <div class="tagline">India's Property &bull; Infrastructure &bull; Investment Monitor &mdash; Verified Sources Only &bull; No Ads</div>
+</div>
+
+<!-- META BAR -->
+<div class="meta-bar">
+  <div>Friday, 29 May 2026 &nbsp;&bull;&nbsp; <span>Last updated: 29 May 2026 &mdash; Evening Edition</span> &nbsp;&bull;&nbsp; 20 verified stories</div>
+  <button class="refresh-btn" onclick="sendPrompt('Refresh my TERRAIN newspaper news dashboard with the latest stories from credible sources and update the artifact')">&#8635; Refresh Edition</button>
+</div>
+
+<!-- NAV TABS -->
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="showTab('real-estate', this)">Real Estate &amp; Land</div>
+  <div class="nav-tab" onclick="showTab('roads', this)">Roads &amp; Infrastructure</div>
+  <div class="nav-tab" onclick="showTab('govt', this)">Govt Schemes &amp; Policies</div>
+  <div class="nav-tab" onclick="showTab('sez', this)">Economic Zones &amp; SEZs</div>
+  <div class="nav-tab" onclick="showTab('archive', this)">Archive</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- REAL ESTATE & LAND -->
+  <div id="tab-real-estate" class="tab-panel active">
+    <div class="section-label">Real Estate &amp; Land &mdash; 5 Verified Stories &mdash; May 2026</div>
+    <div class="news-grid">
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.business-standard.com/finance/personal-finance/30-7-billion-surge-india-real-estate-sees-record-inflows-up-88-in-2-yrs-126050500797_1.html" target="_blank">$30.7 Billion Surge: India Real Estate Sees Record Inflows, Up 88% in 2 Years</a></h3>
+          <span class="source-badge">Business Standard</span>
+        </div>
+        <div class="card-date">5 May 2026</div>
+        <div class="card-summary">Equity inflows into Indian real estate reached a record $30.7 billion between 2024 and Q1 2026, an 88% jump from $16.3 billion in the prior two-year period. The surge was accompanied by the acquisition of roughly 6,025 acres of land for greenfield developments, representing a capital deployment of $13 billion.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.business-standard.com/industry/news/japan-s-dbj-makes-first-india-real-estate-bet-via-hdfc-capital-fund-126052800628_1.html" target="_blank">Development Bank of Japan Makes First Real Estate Investment in India via HDFC Capital Fund</a></h3>
+          <span class="source-badge">Business Standard</span>
+        </div>
+        <div class="card-date">28 May 2026</div>
+        <div class="card-summary">Development Bank of Japan (DBJ) has committed capital to the HDFC Capital Development of Real Estate Affordable and Mid-Income Fund (H-DREAM Fund), marking the bank's inaugural real estate investment in India. The move signals rising confidence among Japanese institutional investors in India's structured real estate credit market.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.business-standard.com/industry/news/listed-developers-expand-beyond-home-markets-housing-demand-126052900882_1.html" target="_blank">Pan-India Expansion Is Major Strategic Focus for India's Top Listed Developers</a></h3>
+          <span class="source-badge">Business Standard</span>
+        </div>
+        <div class="card-date">29 May 2026</div>
+        <div class="card-summary">India's top listed real estate developers are rapidly expanding beyond their home markets into high-demand cities including MMR, NCR, Bengaluru, Hyderabad, Pune, and Chennai. The shift reflects strong residential demand across geographies and growing investor appetite for diversified developer portfolios.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.business-standard.com/amp/industry/news/india-offers-highest-real-estate-yields-in-apac-cbre-report-126052100800_1.html" target="_blank">India Beats APAC Peers with Highest Real Estate Yields in Region: CBRE Report</a></h3>
+          <span class="source-badge">Business Standard</span>
+        </div>
+        <div class="card-date">21 May 2026</div>
+        <div class="card-summary">A CBRE report has identified India as offering the highest real estate yields among Asia-Pacific markets, with investment volumes recording a 189% year-on-year jump — the second-highest growth rate in the region after Singapore. The performance is driven by occupier demand, industrial growth, and digital infrastructure expansion.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.business-standard.com/amp/markets/capital-market-news/indian-real-estate-offers-strong-growth-prospects-has-potential-to-scale-beyond-5-8-trillion-by-2047-126050701308_1.html" target="_blank">Indian Real Estate Has Potential to Scale Beyond $5.8 Trillion by 2047</a></h3>
+          <span class="source-badge">Business Standard</span>
+        </div>
+        <div class="card-date">7 May 2026</div>
+        <div class="card-summary">A new report projects Indian real estate could scale beyond $5.8 trillion by 2047, underpinned by strong urbanisation, infrastructure investment, and growing middle-class demand. Over 74% of investors surveyed expressed willingness to increase capital allocation to Indian real estate in 2026.</div>
+      </div>
+
+    </div>
+    <div class="credibility-note">
+      <strong>Verified Sources for This Section:</strong> business-standard.com &bull; jll.com &bull; anarock.com &bull; zeebiz.com
+    </div>
+  </div>
+
+  <!-- ROADS & INFRASTRUCTURE -->
+  <div id="tab-roads" class="tab-panel">
+    <div class="section-label">Roads &amp; Infrastructure &mdash; 5 Verified Stories &mdash; 2026</div>
+    <div class="news-grid">
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.constructionworld.in/transport-infrastructure/highways-and-roads-infrastructure/h.g.-infra-engineering-secures-rs-39.31-bn-road-project/91720" target="_blank">H.G. Infra Engineering Secures Rs 39.31 Billion Pune–Shirur Road Project</a></h3>
+          <span class="source-badge">Construction World</span>
+        </div>
+        <div class="card-date">11 May 2026</div>
+        <div class="card-summary">H.G. Infra Engineering received a Letter of Award from Welspun Enterprises for a six-lane (partially elevated) highway corridor between Pune and Shirur on NH753F in Maharashtra. The Rs 39.31 billion project has a 36-month construction timeline.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.constructionworld.in/policy-updates-and-economic-news/top-10-mega-infrastructure-projects-in-india--2026-/92182" target="_blank">Top 10 Mega Infrastructure Projects in India (2026)</a></h3>
+          <span class="source-badge">Construction World</span>
+        </div>
+        <div class="card-date">2026</div>
+        <div class="card-summary">Construction World has compiled India's top 10 mega infrastructure projects underway in 2026, spanning expressways, freight corridors, ports, and urban transit. Several projects are in their final stages of completion, with key corridors including Delhi–Mumbai and Bengaluru–Chennai expected to be operational this year.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.constructionworld.in/transport-infrastructure/highways-and-roads-infrastructure/barrier-free-tolling--road-safety-bill-top-transport-agenda-for-2026/83828" target="_blank">Barrier-Free Tolling and Road Safety Bill Top India's Transport Agenda for 2026</a></h3>
+          <span class="source-badge">Construction World</span>
+        </div>
+        <div class="card-date">2026</div>
+        <div class="card-summary">Barrier-free tolling using GNSS technology and the introduction of a dedicated Road Safety Bill are among the top priorities on India's transport agenda for 2026. The initiatives aim to reduce congestion at toll plazas and establish a statutory framework for road safety enforcement.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.constructionworld.in/transport-infrastructure/highways-and-roads-infrastructure/348-nh-projects-under-way;-most-to-finish-by-fy27-gadkari/83056" target="_blank">348 National Highway Projects Underway; Most to Finish by FY27: Gadkari</a></h3>
+          <span class="source-badge">Construction World</span>
+        </div>
+        <div class="card-date">2026</div>
+        <div class="card-summary">Union Minister Nitin Gadkari informed Parliament that 348 National Highway projects are currently under construction, with most expected to be completed by FY2026-27. A small number may spill over into FY2027-28 due to land acquisition and forest clearance challenges.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.constructionworld.in/transport-infrastructure/highways-and-roads-infrastructure/bihar-set-for-first-six-lane-nh-new-expressways/84206" target="_blank">Bihar Set for Its First Six-Lane National Highway and New Expressways</a></h3>
+          <span class="source-badge">Construction World</span>
+        </div>
+        <div class="card-date">2026</div>
+        <div class="card-summary">Bihar is on track to receive its first six-lane National Highway along with multiple new expressway corridors, significantly upgrading the state's connectivity. The projects form part of the central government's push to reduce infrastructure deficits in eastern India.</div>
+      </div>
+
+    </div>
+    <div class="credibility-note">
+      <strong>Verified Sources for This Section:</strong> constructionworld.in &bull; infrastructuretoday.co.in &bull; nhai.gov.in &bull; pib.gov.in
+    </div>
+  </div>
+
+  <!-- GOVT SCHEMES & POLICIES -->
+  <div id="tab-govt" class="tab-panel">
+    <div class="section-label">Govt Schemes &amp; Policies &mdash; 5 Verified Stories &mdash; 2026</div>
+    <div class="news-grid">
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.zeebiz.com/real-estate/news-dda-housing-scheme-2026-registration-741-two-bhk-flats-karkardooma-east-delhi-387248" target="_blank">DDA Housing Scheme 2026: 741 Two-BHK Flats on Offer at Karkardooma, East Delhi</a></h3>
+          <span class="source-badge">Zee Biz</span>
+        </div>
+        <div class="card-date">2026</div>
+        <div class="card-summary">The Delhi Development Authority (DDA) launched its 2026 housing scheme — "DDA Towering Heights at East Delhi Hub, Karkardooma" — offering 741 two-BHK flats on a First Come First Serve basis. The scheme targets mid-income buyers seeking affordable housing in East Delhi.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://static.pib.gov.in/WriteReadData/specificdocs/documents/2026/mar/doc2026313823001.pdf" target="_blank">SWAMIH: A Policy Lifeline for India's Stalled Housing Sector</a></h3>
+          <span class="source-badge">PIB</span>
+        </div>
+        <div class="card-date">13 March 2026</div>
+        <div class="card-summary">The PIB published a detailed note on the SWAMIH fund's role in reviving stalled residential projects across India, providing last-mile financing to homebuyers stuck in incomplete developments. The fund continues to be a critical policy instrument for resolving the legacy of stalled housing projects.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2202527&reg=3&lang=2" target="_blank">Government Outlines New Initiatives to Enhance Urban Housing and Development</a></h3>
+          <span class="source-badge">PIB</span>
+        </div>
+        <div class="card-date">2026</div>
+        <div class="card-summary">The Ministry of Housing and Urban Affairs outlined a range of new initiatives aimed at improving urban housing supply and infrastructure, including streamlined approvals and state partnerships. The measures are designed to accelerate delivery under PMAY-U 2.0 and expand affordable housing access.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2043924" target="_blank">Pradhan Mantri Awas Yojana-Urban 2.0: 97 Lakh Houses Delivered as of January 2026</a></h3>
+          <span class="source-badge">PIB</span>
+        </div>
+        <div class="card-date">January 2026</div>
+        <div class="card-summary">Under PMAY-U 2.0, 122.28 lakh houses have been sanctioned, of which 97.02 lakh have been completed and delivered to beneficiaries as of January 2026. The scheme provides financial assistance of ₹2.30 lakh crore over five years to 1 crore urban poor and middle-class families.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.zeebiz.com/real-estate/news-budget-2026-real-estate-affordable-housing-tax-relief-infrastructure-push-387881" target="_blank">Budget 2026: Real Estate Industry Seeks Policy Support to Revive Affordable Housing</a></h3>
+          <span class="source-badge">Zee Biz</span>
+        </div>
+        <div class="card-date">2026</div>
+        <div class="card-summary">Industry stakeholders submitted Budget 2026 requests for tax relief and policy incentives to revive India's affordable housing segment, which has underperformed relative to the premium market. Key demands include infrastructure status for affordable housing and stamp duty reductions to improve affordability.</div>
+      </div>
+
+    </div>
+    <div class="credibility-note">
+      <strong>Verified Sources for This Section:</strong> pib.gov.in &bull; business-standard.com &bull; zeebiz.com
+    </div>
+  </div>
+
+  <!-- ECONOMIC ZONES & SEZs -->
+  <div id="tab-sez" class="tab-panel">
+    <div class="section-label">Economic Zones &amp; SEZs &mdash; 5 Verified Stories &mdash; 2026</div>
+    <div class="news-grid">
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2246386&reg=3&lang=2" target="_blank">Union Budget 2026–27: Strengthening SEZs for Global Competitiveness &amp; Growth</a></h3>
+          <span class="source-badge">PIB</span>
+        </div>
+        <div class="card-date">2026</div>
+        <div class="card-summary">Budget 2026-27 announced measures to strengthen India's Special Economic Zones, including development of an integrated East Coast Industrial Corridor with a key node at Durgapur. The National Industrial Corridor Development Trust received a ₹3,000 crore allocation in Budget Estimates 2026-27.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2232996&reg=3&lang=2" target="_blank">Travelling Across the Industrial Corridors of India: PIB's Comprehensive Overview</a></h3>
+          <span class="source-badge">PIB</span>
+        </div>
+        <div class="card-date">26 February 2026</div>
+        <div class="card-summary">PIB published an in-depth overview of India's National Industrial Corridor Development Programme (NICDP), which is building modern industrial corridors with plug-and-play infrastructure and multimodal connectivity. The corridors are designed to lower production costs and integrate India into global supply chains.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.pib.gov.in/PressNoteDetails.aspx?NoteId=157960&ModuleId=3&reg=3&lang=2" target="_blank">India's SEZ Exports Rise 32% to ₹11.70 Lakh Crore; 368 Zones Notified</a></h3>
+          <span class="source-badge">PIB</span>
+        </div>
+        <div class="card-date">2026</div>
+        <div class="card-summary">India has 368 notified SEZs with total cumulative investment of ₹7.86 lakh crore as of February 2026. Exports from operational SEZs rose 32.02% year-on-year to over ₹11.70 lakh crore in 2025-26 (till December 2025), with SEZ employment rising to 31.73 lakh people.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.business-standard.com/topic/special-economic-zones" target="_blank">Micron to Set Up Rs 13,000 Crore SEZ in Sanand, Gujarat; Aequs in Dharwad</a></h3>
+          <span class="source-badge">Business Standard</span>
+        </div>
+        <div class="card-date">2026</div>
+        <div class="card-summary">US semiconductor giant Micron will establish an SEZ facility in Sanand, Gujarat, spanning 37.64 hectares with an estimated investment of Rs 13,000 crore, reinforcing India's push to build a domestic semiconductor ecosystem. Aequs will separately set up an electronics components SEZ in Dharwad, Karnataka, with Rs 100 crore investment.</div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-header">
+          <h3><a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2246386&reg=3&lang=2" target="_blank">East Coast Industrial Corridor to Drive Eastern India's Manufacturing Growth</a></h3>
+          <span class="source-badge">PIB</span>
+        </div>
+        <div class="card-date">2026</div>
+        <div class="card-summary">Budget 2026-27 spotlighted the East Coast Industrial Corridor as a new growth engine for eastern India, with Durgapur designated as a key industrial node. The corridor is expected to catalyse manufacturing investment, create large-scale employment, and improve India's integration with Southeast Asian trade routes.</div>
+      </div>
+
+    </div>
+    <div class="credibility-note">
+      <strong>Verified Sources for This Section:</strong> pib.gov.in &bull; business-standard.com &bull; zeebiz.com &bull; constructionworld.in
+    </div>
+  </div>
+
+  <!-- ARCHIVE -->
+  <div id="tab-archive" class="tab-panel">
+    <div class="archive-msg">
+      <h3>Edition Archive</h3>
+      <p>Archive builds automatically after each scheduled refresh. Complete GitHub Pages setup to browse past editions online from any device.</p>
+      <br>
+      <p>Each edition is saved locally in the <strong>archive/</strong> folder as a dated HTML snapshot (e.g. <code>2026-05-29-evening.html</code>). Morning and evening editions are preserved separately.</p>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<script>
+function showTab(name, el) {
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+  docume
